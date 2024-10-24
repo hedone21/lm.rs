@@ -45,7 +45,7 @@ fn unpack(value: i8) -> (i8, i8) {
     (a, b)
 }
 
-pub fn dequantize<'a>(qx: &QuantizedTensor, x: &mut  [f32], n: usize, gs: u32, q_type: QuantType) {
+pub fn dequantize(qx: &QuantizedTensor, x: &mut  [f32], n: usize, gs: u32, q_type: QuantType) {
     match q_type {
         QuantType::Q8_0 => { 
             for (i, value) in x.iter_mut().enumerate().take(n) {

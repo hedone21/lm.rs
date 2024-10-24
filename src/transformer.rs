@@ -386,16 +386,16 @@ impl<'a> Transformer<'a> {
             matmul(k, &embeddings, &w.wk.as_float()[(l*dim*kv_dim) as usize..(l*dim*kv_dim + dim*kv_dim) as usize], dim as usize, kv_dim as usize);
             matmul(v, &embeddings, &w.wv.as_float()[(l*dim*kv_dim) as usize..(l*dim*kv_dim + dim*kv_dim) as usize], dim as usize, kv_dim as usize);
         } else {
-            let sxq = &mut MutableQuantizedTensor { q: vec![0; total_shape], s: vec![0.0; total_shape as usize]};
+            let sxq = &mut MutableQuantizedTensor { q: vec![0; total_shape], s: vec![0.0; total_shape]};
             
             if p.q_type == QuantType::Q8_0 {
-                quantize(sxq, &embeddings, total_shape as usize, gs);
+                quantize(sxq, &embeddings, total_shape, gs);
                 
                 matmul_q8(&mut sq, sxq, &w.wq.as_quantized()[l as usize], dim as usize, att_dim as usize, gs as usize);
                 matmul_q8(k, sxq, &w.wk.as_quantized()[l as usize], dim as usize, kv_dim as usize, gs as usize);
                 matmul_q8(v, sxq, &w.wv.as_quantized()[l as usize], dim as usize, kv_dim as usize, gs as usize);
             } else if p.q_type == QuantType::Q4_0 {
-                quantize_q4(sxq, &embeddings, total_shape as usize, gs);
+                quantize_q4(sxq, &embeddings, total_shape, gs);
                 
                 matmul_q4(&mut sq, sxq, &w.wq.as_quantized()[l as usize], dim as usize, att_dim as usize, gs as usize);
                 matmul_q4(k, sxq, &w.wk.as_quantized()[l as usize], dim as usize, kv_dim as usize, gs as usize);
@@ -552,11 +552,11 @@ impl<'a> Transformer<'a> {
             let sxq = &mut MutableQuantizedTensor { q: vec![0; (dim * sl) as usize], s: vec![0.0; (dim * sl) as usize]};
             
             if p.q_type == QuantType::Q8_0 {
-                quantize(sxq, &embeddings, total_shape as usize, gs);
+                quantize(sxq, &embeddings, total_shape, gs);
                 matmul_q8(&mut hidden_embeddings, sxq, &w.w1.as_quantized()[l as usize], dim as usize, hidden_dim as usize, gs as usize);
                 matmul_q8(&mut temp_hidden_embeddings, sxq, &w.w3.as_quantized()[l as usize], dim as usize, hidden_dim as usize, gs as usize);
             } else if p.q_type == QuantType::Q4_0{
-                quantize_q4(sxq, &embeddings, total_shape as usize, gs);
+                quantize_q4(sxq, &embeddings, total_shape, gs);
                 matmul_q4(&mut hidden_embeddings, sxq, &w.w1.as_quantized()[l as usize], dim as usize, hidden_dim as usize, gs as usize);
                 matmul_q4(&mut temp_hidden_embeddings, sxq, &w.w3.as_quantized()[l as usize], dim as usize, hidden_dim as usize, gs as usize);
             }
