@@ -332,7 +332,7 @@ impl<'a> Transformer<'a> {
                 if p.model_type != ModelType::PHI {
                     matmul_q4(&mut s.logits, sxq, &w.token_embedding_quant.as_ref().unwrap().as_quantized()[0], dim as usize, p.vocab_size as usize, gs as usize);
                 } else {
-                    matmul_q4(&mut s.logits, sxq, &(w.lm_head.as_ref().unwrap().as_quantized())[0], dim as usize, p.vocab_size as usize, gs as usize);
+                    matmul_q4(&mut s.logits, sxq, &w.lm_head.as_ref().unwrap().as_quantized()[0], dim as usize, p.vocab_size as usize, gs as usize);
                 }
             }
         }
