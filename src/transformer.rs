@@ -622,7 +622,6 @@ impl<'a> Transformer<'a> {
         out_embeddings
     }
 
-    // For now we use batch = 1, probably doing a batched alternative would be faster
     pub fn fill_kv_cache(&mut self, embeddings: &mut [f32], curr_pos: u32) -> u32 {
         let p = self.args;
         let num_embeddings = embeddings.len() as u32/self.args.dim;    
